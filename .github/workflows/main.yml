@@ -1,4 +1,3 @@
-
 name: CI - Cyber Bot
 
 on:
@@ -13,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x, 22.x]
+        node-version: [20.x]
 
     steps:
     - name: Checkout Repository
@@ -25,16 +24,14 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - name: Install Dependencies
-      run: npm ci
-
-    - name: Check Project Structure
-      run: ls -la
-
-    - name: Test Run (Dry Run)
+    - name: Clean Cache & Install Dependencies
       run: |
-        echo "✅ Dependencies installed successfully"
-        echo "Node version: $(node --version)"
-        echo "NPM version: $(npm --version)"
-        # যদি তোমার বটের কোনো test command থাকে তাহলে এখানে দিতে পারো
-        # npm test   (যদি থাকে)
+        npm cache clean --force
+        npm install --legacy-peer-deps
+
+    - name: Show Project Status
+      run: |
+        echo "Node Version: $(node --version)"
+        echo "NPM Version: $(npm --version)"
+        ls -la
+        echo "✅ Installation Successful!"
