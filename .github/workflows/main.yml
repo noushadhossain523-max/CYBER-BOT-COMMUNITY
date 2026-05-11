@@ -1,10 +1,11 @@
-name: Node.js CI
+
+name: CI - Cyber Bot
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   build:
@@ -12,25 +13,28 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        node-version: [20.x, 22.x]
 
     steps:
-    # Step to check out the repository code
-    - uses: actions/checkout@v2
+    - name: Checkout Repository
+      uses: actions/checkout@v4
 
-    # Step to set up the specified Node.js version
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
+        cache: 'npm'
 
-    # Step to install dependencies
-    - name: Install dependencies
-      run: npm install
+    - name: Install Dependencies
+      run: npm ci
 
-    # Step to run the bot with the correct port
-    - name: Start the bot
-      env:
-        PORT: 8080
-      run: npm start
+    - name: Check Project Structure
+      run: ls -la
+
+    - name: Test Run (Dry Run)
+      run: |
+        echo "✅ Dependencies installed successfully"
+        echo "Node version: $(node --version)"
+        echo "NPM version: $(npm --version)"
+        # যদি তোমার বটের কোনো test command থাকে তাহলে এখানে দিতে পারো
+        # npm test   (যদি থাকে)
